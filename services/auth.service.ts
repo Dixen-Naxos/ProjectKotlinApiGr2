@@ -1,6 +1,6 @@
 import {UserDocument, UserModel, UserProps} from "../models";
 import {SecurityUtils} from "../utils";
-import {SessionDocument, SessionModel} from "../models/session.model";
+import {SessionDocument, SessionModel} from "../models";
 import {Session} from "inspector";
 import fs from "fs";
 

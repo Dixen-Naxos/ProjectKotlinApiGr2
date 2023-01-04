@@ -6,17 +6,22 @@ export class AuthController {
 
     async createUser(req: Request, res: Response) {
         try {
-            if(!req.body.name) {
+            if (!req.body.name) {
                 res.status(400).end();
-            } if(!req.body.surname) {
+            }
+            if (!req.body.surname) {
                 res.status(400).end();
-            } if(!req.body.password) {
+            }
+            if (!req.body.password) {
                 res.status(400).end();
-            } if (!req.body.email) {
+            }
+            if (!req.body.email) {
                 res.status(400).end();
-            } if(!req.body.email.match("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            }
+            if (!req.body.email.match("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
                 res.status(418).end();
-            } if (!(await AuthService.getInstance().getByEmail(req.body.email))) {
+            }
+            if (!(await AuthService.getInstance().getByEmail(req.body.email))) {
                 res.status(401).end();
             }
 
@@ -29,7 +34,7 @@ export class AuthController {
 
             res.json(user);
 
-        } catch(err) {
+        } catch (err) {
             res.status(401).end();
         }
     }
@@ -44,7 +49,7 @@ export class AuthController {
             res.json({
                 token: session?._id
             });
-        } catch(err) {
+        } catch (err) {
             res.status(401).end(); // unauthorized
         }
     }
@@ -63,12 +68,12 @@ export class AuthController {
     async getUser(req: Request, res: Response) {
         try {
             const user = await AuthService.getInstance().getById(req.params.user_id);
-            if(user === null) {
+            if (user === null) {
                 res.status(404).end();
                 return;
             }
             res.json(user);
-        } catch(err) {
+        } catch (err) {
             res.status(400).end();
             return;
         }
@@ -77,12 +82,12 @@ export class AuthController {
     async delUser(req: Request, res: Response) {
         try {
             const success = await AuthService.getInstance().deleteById(req.body.user._id);
-            if(success) {
+            if (success) {
                 res.status(204).end();
             } else {
                 res.status(404).end();
             }
-        } catch(err) {
+        } catch (err) {
             res.status(400).end();
         }
     }
@@ -98,12 +103,12 @@ export class AuthController {
             }
 
             const success = await AuthService.getInstance().deleteById(req.params.user_id);
-            if(success) {
+            if (success) {
                 res.status(204).end();
             } else {
                 res.status(404).end();
             }
-        } catch(err) {
+        } catch (err) {
             res.status(400).end();
         }
     }
@@ -111,20 +116,7 @@ export class AuthController {
     async updateUser(req: Request, res: Response) {
         try {
             const user = await AuthService.getInstance().updateById(req.body.user._id, req.body);
-            if(!user) {
-                res.status(404).end();
-                return;
-            }
-            res.json(user);
-        } catch (err) {
-            res.status(400).end();
-        }
-    }
-
-    async updateRole(req: Request, res: Response) {
-        try {
-            const user = await AuthService.getInstance().updateRole(req.body, res);
-            if(!user) {
+            if (!user) {
                 res.status(404).end();
                 return;
             }
@@ -136,28 +128,28 @@ export class AuthController {
 
     async disconnectUser(req: Request, res: Response) {
         const authorization = req.headers['authorization'];
-        if(authorization === undefined) {
+        if (authorization === undefined) {
             res.status(401).end();
             return;
         }
         const parts = authorization.split(" ");
-        if(parts.length !== 2) {
+        if (parts.length !== 2) {
             res.status(401).end();
             return;
         }
-        if(parts[0] !== 'Bearer') {
+        if (parts[0] !== 'Bearer') {
             res.status(401).end();
             return;
         }
         const token = parts[1];
         try {
             const success = await AuthService.getInstance().disconnect(token);
-            if(success) {
+            if (success) {
                 res.status(204).end();
             } else {
                 res.status(404).end();
             }
-        } catch(err) {
+        } catch (err) {
             res.status(401).end();
         }
     }
@@ -167,12 +159,8 @@ export class AuthController {
         router.post('/subscribe', express.json(), this.createUser.bind(this));
         router.post('/login', express.json(), this.logUser.bind(this));
         router.get('/me', checkUserConnected(), this.me.bind(this));
-        router.get('/get/:user_id', checkUserConnectedToRole(3), this.getUser.bind(this));
-        router.get('/get', checkUserConnectedToRole(3), this.getAllUsers.bind(this));
         router.post('/del', checkUserConnected(), this.delUser.bind(this));
-        router.get('/delete/:user_id', checkUserConnectedToRole(3), this.deleteUser.bind(this));
         router.post('/update', checkUserConnected(), express.json(), this.updateUser.bind(this));
-        router.post('/updateRole', checkUserConnectedToRole(3), express.json(), this.updateRole.bind(this));
         router.get('/disconnect', this.disconnectUser.bind(this));
         return router;
     }
