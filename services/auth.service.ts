@@ -25,8 +25,7 @@ export class AuthService {
         }
         const model = new UserModel({
             email: user.email,
-            password: SecurityUtils.sha512(user.password),
-            role: 1
+            password: SecurityUtils.sha512(user.password)
         });
         return model.save();
     }
