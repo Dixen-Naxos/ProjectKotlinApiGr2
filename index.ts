@@ -3,6 +3,7 @@ config();
 
 import express from "express";
 import mongoose, {Mongoose} from "mongoose";
+import {AuthController, SteamApiController} from "./controllers";
 
 async function startServer(): Promise<void> {
 
@@ -15,8 +16,10 @@ async function startServer(): Promise<void> {
 
     const app = express();
 
-    //const categoryController = new CategoryController();
-    //app.use('/category', categoryController.buildRoutes());
+    const authController = new AuthController();
+    app.use('/auth', authController.buildRoutes());
+    const steamApiController = new SteamApiController();
+    app.use('/steamApi', steamApiController.buildRoutes());
 
     app.listen(process.env.PORT, function() {
         console.log("Server listening on port " + process.env.PORT);
