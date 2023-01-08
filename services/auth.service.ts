@@ -24,8 +24,6 @@ export class AuthService {
             throw new Error('Missing password');
         }
         const model = new UserModel({
-            name: user.name,
-            surname: user.surname,
             email: user.email,
             password: SecurityUtils.sha512(user.password),
             role: 1
@@ -54,10 +52,6 @@ export class AuthService {
         return session;
     }
 
-    async getAll(): Promise<UserDocument[]> {
-        return UserModel.find().exec();
-    }
-
     async getById(userId: string): Promise<UserDocument | null> {
         return UserModel.findById(userId).exec();
     }
@@ -67,10 +61,7 @@ export class AuthService {
     }
 
     async getByIdPopulate(userId: string): Promise<UserDocument | null> {
-        return UserModel.findById(userId).populate({
-            path: "courses",
-            options: {sort: [{'date': 'desc'}]}
-        }).populate("address").populate({path: "groups", options: {sort: [{'updatedAt': 'desc'}]}}).exec();
+        return UserModel.findById(userId).exec();
     }
 
     async updateById(userId: string, props: UserProps): Promise<UserDocument | null> {
@@ -83,26 +74,8 @@ export class AuthService {
                 user.email = props.email;
             }
         }
-        if (props.name !== undefined) {
-            user.name = props.name;
-        }
-        if (props.surname !== undefined) {
-            user.surname = props.surname;
-        }
         if (props.password !== undefined) {
             user.password = SecurityUtils.sha512(props.password);
-        }
-        const res = await user.save();
-        return res;
-    }
-
-    async updateRole(props: UserProps): Promise<UserDocument | null> {
-        if (props._id == undefined) {
-            return null;
-        }
-        const user = await this.getById(props._id);
-        if (!user) {
-            return null;
         }
         const res = await user.save();
         return res;
