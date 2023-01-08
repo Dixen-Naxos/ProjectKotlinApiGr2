@@ -2,14 +2,6 @@ import mongoose, {Schema, Document, Model} from "mongoose";
 import {SessionProps} from "./session.model";
 
 const userSchema = new Schema({
-    name: {
-        type: Schema.Types.String,
-        required: true
-    },
-    surname: {
-        type: Schema.Types.String,
-        required: true
-    },
     email: {
         type: Schema.Types.String,
         required: true,
@@ -31,8 +23,6 @@ const userSchema = new Schema({
 
 export interface UserProps {
     _id: string;
-    name: string;
-    surname: string;
     email: string;
     password: string;
     sessions: string[] | SessionProps[];

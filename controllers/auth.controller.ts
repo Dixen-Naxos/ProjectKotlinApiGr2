@@ -6,12 +6,6 @@ export class AuthController {
 
     async createUser(req: Request, res: Response) {
         try {
-            if (!req.body.name) {
-                res.status(400).end();
-            }
-            if (!req.body.surname) {
-                res.status(400).end();
-            }
             if (!req.body.password) {
                 res.status(400).end();
             }
@@ -26,8 +20,6 @@ export class AuthController {
             }
 
             const user = await AuthService.getInstance().subscribeUser({
-                name: req.body.name,
-                surname: req.body.surname,
                 email: req.body.email,
                 password: req.body.password
             });
@@ -58,11 +50,6 @@ export class AuthController {
         // @ts-ignore
         const user = await AuthService.getInstance().getByIdPopulate(req.user._id);
         res.json(user);
-    }
-
-    async getAllUsers(req: Request, res: Response) {
-        const users = await AuthService.getInstance().getAll();
-        res.json(users);
     }
 
     async getUser(req: Request, res: Response) {
