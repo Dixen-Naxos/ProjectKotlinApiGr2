@@ -25,7 +25,9 @@ export class AuthService {
         }
         const model = new UserModel({
             email: user.email,
-            password: SecurityUtils.sha512(user.password)
+            password: SecurityUtils.sha512(user.password),
+            likes: user.likes,
+            wishlist: user.wishlist
         });
         return model.save();
     }
@@ -33,7 +35,7 @@ export class AuthService {
     public async logIn(info: Pick<UserProps, 'email' | 'password'>, platform: string): Promise<SessionDocument | null> {
         const user = await UserModel.findOne({
             email: info.email,
-            password: SecurityUtils.sha512(info.password)
+            password: SecurityUtils.sha512(info.password),
         }).exec();
         if (user === null) {
             throw new Error('User not found');

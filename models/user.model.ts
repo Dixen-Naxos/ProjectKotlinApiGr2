@@ -14,6 +14,12 @@ const userSchema = new Schema({
     sessions: [{
         type: Schema.Types.ObjectId,
         ref: "Session"
+    }],
+    likes: [{
+        type: Schema.Types.Number
+    }],
+    wishlist: [{
+        type: Schema.Types.Number
     }]
 }, {
     collection: "users",
@@ -26,6 +32,8 @@ export interface UserProps {
     email: string;
     password: string;
     sessions: string[] | SessionProps[];
+    likes: number[],
+    wishlist: number[]
 }
 
 export type UserDocument = UserProps & Document;

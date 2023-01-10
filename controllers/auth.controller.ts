@@ -21,7 +21,9 @@ export class AuthController {
 
             const user = await AuthService.getInstance().subscribeUser({
                 email: req.body.email,
-                password: req.body.password
+                password: req.body.password,
+                likes: [],
+                wishlist: []
             });
 
             res.json(user);
