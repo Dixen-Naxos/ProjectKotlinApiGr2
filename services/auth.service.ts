@@ -82,6 +82,58 @@ export class AuthService {
         return res;
     }
 
+    async addLike(userId: string, like: string): Promise<UserDocument | null> {
+        const user = await this.getById(userId);
+        if (!user) {
+            return null;
+        }
+        if (like !== undefined) {
+            if(user.likes.indexOf(like) === -1){
+                user.likes.push(like);
+            }
+        }
+        const res = await user.save();
+        return res;
+    }
+
+    async addWish(userId: string, wish: string): Promise<UserDocument | null> {
+        const user = await this.getById(userId);
+        if (!user) {
+            return null;
+        }
+        if (wish !== undefined) {
+            if(user.wishlist.indexOf(wish) == -1){
+                user.wishlist.push(wish);
+            }
+        }
+        const res = await user.save();
+        return res;
+    }
+
+    async removeLike(userId: string, like: string): Promise<UserDocument| null>{
+        const user = await this.getById(userId);
+        if(!user) {
+            return null;
+        }
+        if(like !== undefined) {
+            user.likes.splice(user.likes.indexOf(like), 1);
+        }
+        const res = await user.save();
+        return res;
+    }
+
+    async removeWish(userId: string, wish: string): Promise<UserDocument| null>{
+        const user = await this.getById(userId);
+        if(!user) {
+            return null;
+        }
+        if(wish !== undefined) {
+            user.wishlist.splice(user.wishlist.indexOf(wish), 1);
+        }
+        const res = await user.save();
+        return res;
+    }
+
     public async getUserFrom(token: string): Promise<UserProps | null> {
         const session = await SessionModel.findOne({
             _id: token,

@@ -68,19 +68,6 @@ export class AuthController {
         }
     }
 
-    async delUser(req: Request, res: Response) {
-        try {
-            const success = await AuthService.getInstance().deleteById(req.body.user._id);
-            if (success) {
-                res.status(204).end();
-            } else {
-                res.status(404).end();
-            }
-        } catch (err) {
-            res.status(400).end();
-        }
-    }
-
     async deleteUser(req: Request, res: Response) {
         try {
 
@@ -143,13 +130,69 @@ export class AuthController {
         }
     }
 
+    async addLike(req: Request, res: Response) {
+        try {
+            const user = await AuthService.getInstance().addLike(req.body.user._id, req.body.like);
+            if (!user) {
+                res.status(404).end()
+                return;
+            }
+            res.json(user);
+        } catch (err) {
+            res.status(400).end();
+        }
+    }
+
+    async addWish(req: Request, res: Response) {
+        try {
+            const user = await AuthService.getInstance().addWish(req.body.user._id, req.body.wish);
+            if (!user) {
+                res.status(404).end()
+                return;
+            }
+            res.json(user);
+        } catch (err) {
+            res.status(400).end();
+        }
+    }
+
+    async removeWish(req: Request, res: Response) {
+        try {
+            const user = await AuthService.getInstance().removeWish(req.body.user._id, req.body.wish);
+            if (!user) {
+                res.status(404).end()
+                return;
+            }
+            res.json(user);
+        } catch (err) {
+            res.status(400).end();
+        }
+    }
+
+    async removeLike(req: Request, res: Response) {
+        try {
+            const user = await AuthService.getInstance().removeLike(req.body.user._id, req.body.wish);
+            if (!user) {
+                res.status(404).end()
+                return;
+            }
+            res.json(user);
+        } catch (err) {
+            res.status(400).end();
+        }
+    }
+
     buildRoutes(): Router {
         const router = express.Router();
         router.post('/subscribe', express.json(), this.createUser.bind(this));
         router.post('/login', express.json(), this.logUser.bind(this));
         router.get('/me', checkUserConnected(), this.me.bind(this));
-        router.post('/del', checkUserConnected(), this.delUser.bind(this));
+        router.post('/del', checkUserConnected(), this.deleteUser.bind(this));
         router.post('/update', checkUserConnected(), express.json(), this.updateUser.bind(this));
+        router.post('/addLike', checkUserConnected(), express.json(), this.addLike.bind(this));
+        router.post('/addWish', checkUserConnected(), express.json(), this.addWish.bind(this));
+        router.post('/removeLike', checkUserConnected(), express.json(), this.removeLike.bind(this));
+        router.post('/removeWish', checkUserConnected(), express.json(), this.removeWish.bind(this));
         router.get('/disconnect', this.disconnectUser.bind(this));
         return router;
     }

@@ -16,10 +16,10 @@ const userSchema = new Schema({
         ref: "Session"
     }],
     likes: [{
-        type: Schema.Types.Number
+        type: Schema.Types.String
     }],
     wishlist: [{
-        type: Schema.Types.Number
+        type: Schema.Types.String
     }]
 }, {
     collection: "users",
@@ -32,8 +32,8 @@ export interface UserProps {
     email: string;
     password: string;
     sessions: string[] | SessionProps[];
-    likes: number[],
-    wishlist: number[]
+    likes: string[],
+    wishlist: string[]
 }
 
 export type UserDocument = UserProps & Document;
