@@ -47,7 +47,6 @@ export class SteamApiController {
 
     async getListOfGames(req: Request, res: Response) {
         try {
-            console.log("check")
             let data = await steamApiCache.getItem(`ListOfGames`);
             if(data === null || data === undefined) {
                 data = await SteamApiService.getInstance().getListOfGames();

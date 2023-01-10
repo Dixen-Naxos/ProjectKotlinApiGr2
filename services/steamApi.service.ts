@@ -29,7 +29,7 @@ export class SteamApiService {
     }
 
     public async getListOfGames(): Promise<any> {
-        const res = await axios.get(`http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=46F70CEA9204FAF546C28FE21B5FF195&format=json`);
+        const res = await axios.get(`http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=${process.env.STEAM_API_KEY}&format=json`);
         return res.data;
     }
 }
