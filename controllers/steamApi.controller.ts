@@ -32,7 +32,7 @@ export class SteamApiController {
         }
     }
 
-    async getGameOpinions(req: Request, res: Response){
+    async getGameOpinions(req: Request, res: Response) {
         try {
             let data = await steamApiCache.getItem<any>(`opinions_${req.params.language}_${req.params.appId}`);
             if (data === null || data === undefined) {
@@ -45,11 +45,26 @@ export class SteamApiController {
         }
     }
 
+    async getListOfGames(req: Request, res: Response) {
+        try {
+            console.log("check")
+            let data = await steamApiCache.getItem(`ListOfGames`);
+            if(data === null || data === undefined) {
+                data = await SteamApiService.getInstance().getListOfGames();
+                const res = await steamApiCache.setItem(`ListOfGames`, data, {ttl: 3600});
+            }
+            res.json(data);
+        } catch (err) {
+            res.status(500).end()
+        }
+    }
+
     buildRoutes(): Router {
         const router = express.Router();
         router.get('/getMostPlayedGames/:language', this.getMostPlayedGames.bind(this));
         router.get('/getGameDetails/:appId/:language', this.getGameDetails.bind(this));
         router.get('/getGameOpinions/:appId/:language', this.getGameOpinions.bind(this));
+        router.get('/getListOfGames', this.getListOfGames.bind(this));
         return router;
     }
 }

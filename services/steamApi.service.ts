@@ -19,12 +19,17 @@ export class SteamApiService {
     }
 
     public async getGameDetails(appId: string, language:string): Promise<any> {
-        const res = await axios.get(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=${language}`)
+        const res = await axios.get(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=${language}`);
         return res.data;
     }
 
     public async getGameOpinions(appId: string, language:string): Promise<any> {
-        const res = await axios.get(`https://store.steampowered.com/appreviews/${appId}?json=1&l=${language}`)
+        const res = await axios.get(`https://store.steampowered.com/appreviews/${appId}?json=1&l=${language}`);
+        return res.data;
+    }
+
+    public async getListOfGames(): Promise<any> {
+        const res = await axios.get(`http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=46F70CEA9204FAF546C28FE21B5FF195&format=json`);
         return res.data;
     }
 }
