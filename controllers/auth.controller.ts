@@ -132,12 +132,14 @@ export class AuthController {
 
     async addLike(req: Request, res: Response) {
         try {
-            const user = await AuthService.getInstance().addLike(req.body.user._id, req.body.like);
-            if (!user) {
-                res.status(404).end()
-                return;
+            if(req.user) {
+                const user = await AuthService.getInstance().addLike(req.user._id, req.params.like);
+                if (!user) {
+                    res.status(404).end()
+                    return;
+                }
+                res.json(user);
             }
-            res.json(user);
         } catch (err) {
             res.status(400).end();
         }
@@ -145,12 +147,14 @@ export class AuthController {
 
     async addWish(req: Request, res: Response) {
         try {
-            const user = await AuthService.getInstance().addWish(req.body.user._id, req.body.wish);
-            if (!user) {
-                res.status(404).end()
-                return;
+            if(req.user){
+                const user = await AuthService.getInstance().addWish(req.user._id, req.params.wish);
+                if (!user) {
+                    res.status(404).end()
+                    return;
+                }
+                res.json(user);
             }
-            res.json(user);
         } catch (err) {
             res.status(400).end();
         }
@@ -158,12 +162,14 @@ export class AuthController {
 
     async removeWish(req: Request, res: Response) {
         try {
-            const user = await AuthService.getInstance().removeWish(req.body.user._id, req.body.wish);
-            if (!user) {
-                res.status(404).end()
-                return;
+            if(req.user){
+                const user = await AuthService.getInstance().removeWish(req.user._id, req.params.wish);
+                if (!user) {
+                    res.status(404).end()
+                    return;
+                }
+                res.json(user);
             }
-            res.json(user);
         } catch (err) {
             res.status(400).end();
         }
@@ -171,12 +177,14 @@ export class AuthController {
 
     async removeLike(req: Request, res: Response) {
         try {
-            const user = await AuthService.getInstance().removeLike(req.body.user._id, req.body.wish);
-            if (!user) {
-                res.status(404).end()
-                return;
+            if(req.user){
+                const user = await AuthService.getInstance().removeLike(req.user._id, req.params.like);
+                if (!user) {
+                    res.status(404).end()
+                    return;
+                }
+                res.json(user);
             }
-            res.json(user);
         } catch (err) {
             res.status(400).end();
         }
@@ -189,10 +197,10 @@ export class AuthController {
         router.get('/me', checkUserConnected(), this.me.bind(this));
         router.post('/del', checkUserConnected(), this.deleteUser.bind(this));
         router.post('/update', checkUserConnected(), express.json(), this.updateUser.bind(this));
-        router.post('/addLike', checkUserConnected(), express.json(), this.addLike.bind(this));
-        router.post('/addWish', checkUserConnected(), express.json(), this.addWish.bind(this));
-        router.post('/removeLike', checkUserConnected(), express.json(), this.removeLike.bind(this));
-        router.post('/removeWish', checkUserConnected(), express.json(), this.removeWish.bind(this));
+        router.get('/addLike/:like', checkUserConnected(), this.addLike.bind(this));
+        router.get('/addWish/:wish', checkUserConnected(), this.addWish.bind(this));
+        router.get('/removeLike/:like', checkUserConnected(), this.removeLike.bind(this));
+        router.get('/removeWish/:wish', checkUserConnected(), this.removeWish.bind(this));
         router.get('/disconnect', this.disconnectUser.bind(this));
         return router;
     }
