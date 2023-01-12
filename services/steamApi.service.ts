@@ -32,4 +32,9 @@ export class SteamApiService {
         const res = await axios.get(`http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=${process.env.STEAM_API_KEY}&format=json`);
         return res.data;
     }
+
+    public async searchGames(searched: string): Promise<any> {
+        const res = await axios.get(`https://steamcommunity.com/actions/SearchApps/${searched}/?key=${process.env.STEAM_API_KEY}&format=json`);
+        return res.data;
+    }
 }
