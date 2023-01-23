@@ -33,8 +33,13 @@ export class SteamApiService {
         return res.data;
     }
 
-    public async searchGames(searched: string): Promise<any> {
-        const res = await axios.get(`https://steamcommunity.com/actions/SearchApps/${searched}/?key=${process.env.STEAM_API_KEY}&format=json`);
-        return res.data;
+    public async searchGames(searched: string, language:string): Promise<any> {
+        let res = await axios.get(`https://steamcommunity.com/actions/SearchApps/${searched}/?key=${process.env.STEAM_API_KEY}&l=${language}&format=json`);
+        let returned = {};
+        for (let i = 0; i < res.data.length; i++) {
+            let game = await this.getGameDetails(res.data[i]['appid'], language);
+            returned = Object.assign({}, returned, game);
+        }
+        return returned;
     }
 }

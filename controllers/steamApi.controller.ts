@@ -60,13 +60,14 @@ export class SteamApiController {
 
     async searchGames(req: Request, res: Response) {
         try {
-            let data = await steamApiCache.getItem(`SearGames_${req.params.searched}`);
+            let data = await steamApiCache.getItem(`SearGames_${req.params.language}_${req.params.searched}`);
             if(data === null || data === undefined) {
-                data = await SteamApiService.getInstance().searchGames(req.params.searched);
-                const res = await steamApiCache.setItem(`SearGames_${req.params.searched}`, data, {ttl: 3600});
+                data = await SteamApiService.getInstance().searchGames(req.params.searched, req.params.language);
+                const res = await steamApiCache.setItem(`SearGames_${req.params.language}_${req.params.searched}`, data, {ttl: 3600});
             }
             res.json(data);
         } catch (err) {
+            console.log(err);
             res.status(500).end()
         }
     }
@@ -77,7 +78,7 @@ export class SteamApiController {
         router.get('/getGameDetails/:appId/:language', this.getGameDetails.bind(this));
         router.get('/getGameOpinions/:appId/:language', this.getGameOpinions.bind(this));
         router.get('/getListOfGames', this.getListOfGames.bind(this));
-        router.get('/searchGames/:searched', this.searchGames.bind(this));
+        router.get('/searchGames/:searched/:language', this.searchGames.bind(this));
         return router;
     }
 }
