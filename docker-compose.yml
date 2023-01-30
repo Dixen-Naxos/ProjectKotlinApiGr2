@@ -1,0 +1,14 @@
+version: "3"
+services:
+  KotlinApi:
+    container_name: "KotlinApi"
+    image: "node:latest"
+    user: "node"
+    restart: "always"
+    tty: true
+    working_dir: /home/node/app/dist
+    ports:
+      - "7589:7589"
+    volumes:
+      - "./:/home/node/app"
+    command: "npm start"
