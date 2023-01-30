@@ -72,6 +72,19 @@ export class SteamApiController {
         }
     }
 
+    async getPlayerPseudo(req: Request, res: Response) {
+        try {
+            let data = await steamApiCache.getItem<any>(`pseudo_${req.params.userId}`);
+            if (data === null || data === undefined) {
+                data = await SteamApiService.getInstance().getPseudoFromId(req.params.userId);
+                const res = await steamApiCache.setItem(`pseudo_${req.params.userId}`, data, {ttl: 3600});
+            }
+            res.json(data);
+        } catch (err) {
+            res.status(500).end();
+        }
+    }
+
     buildRoutes(): Router {
         const router = express.Router();
         router.get('/getMostPlayedGames/:language', this.getMostPlayedGames.bind(this));
@@ -79,6 +92,7 @@ export class SteamApiController {
         router.get('/getGameOpinions/:appId/:language', this.getGameOpinions.bind(this));
         router.get('/getListOfGames', this.getListOfGames.bind(this));
         router.get('/searchGames/:searched/:language', this.searchGames.bind(this));
+        router.get('/getPlayerPseudo/:userId', this.getPlayerPseudo.bind(this));
         return router;
     }
 }

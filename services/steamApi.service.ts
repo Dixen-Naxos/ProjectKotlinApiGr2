@@ -42,4 +42,10 @@ export class SteamApiService {
         }
         return returned;
     }
+
+    public async getPseudoFromId(userId: string): Promise<{pseudo: string}> {
+        const res = await axios.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env.STEAM_API_KEY}&format=json&steamids=${userId}`);
+        const result = res.data.response.players[0].personaname;
+        return {pseudo: result};
+    }
 }
