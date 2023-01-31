@@ -190,6 +190,21 @@ export class AuthController {
         }
     }
 
+    async resetPassword(req: Request, res: Response){
+        try {
+            if(req.user){
+                const user = await AuthService.getInstance().removeLike(req.body.email, req.body.password);
+                if (!user) {
+                    res.status(404).end()
+                    return;
+                }
+                res.json(user);
+            }
+        } catch (err) {
+            res.status(400).end();
+        }
+    }
+
     buildRoutes(): Router {
         const router = express.Router();
         router.post('/subscribe', express.json(), this.createUser.bind(this));
@@ -202,6 +217,7 @@ export class AuthController {
         router.get('/removeLike/:like', checkUserConnected(), this.removeLike.bind(this));
         router.get('/removeWish/:wish', checkUserConnected(), this.removeWish.bind(this));
         router.get('/disconnect', this.disconnectUser.bind(this));
+        router.post('/resetPassword', express.json(), this.resetPassword.bind(this));
         return router;
     }
 }

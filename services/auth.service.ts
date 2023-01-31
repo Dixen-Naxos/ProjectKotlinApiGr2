@@ -57,8 +57,8 @@ export class AuthService {
         return UserModel.findById(userId).exec();
     }
 
-    async getByEmail(email: string): Promise<UserDocument[] | null> {
-        return UserModel.find({email: email}).exec();
+    async getByEmail(email: string): Promise<UserDocument | null> {
+        return UserModel.findOne({email: email}).exec();
     }
 
     async getByIdPopulate(userId: string): Promise<UserDocument | null> {
@@ -77,6 +77,18 @@ export class AuthService {
         }
         if (props.password !== undefined) {
             user.password = SecurityUtils.sha512(props.password);
+        }
+        const res = await user.save();
+        return res;
+    }
+
+    async resetPassword(email: string, password: string): Promise<UserDocument | null> {
+        const user = await this.getByEmail(email);
+        if (!user) {
+            return null;
+        }
+        if (password !== undefined) {
+            user.password = SecurityUtils.sha512(password);
         }
         const res = await user.save();
         return res;
