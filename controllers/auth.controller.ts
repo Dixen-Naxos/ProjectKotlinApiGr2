@@ -132,7 +132,7 @@ export class AuthController {
 
     async addLike(req: Request, res: Response) {
         try {
-            if(req.user) {
+            if (req.user) {
                 const user = await AuthService.getInstance().addLike(req.user._id, req.params.like);
                 if (!user) {
                     res.status(404).end()
@@ -147,7 +147,7 @@ export class AuthController {
 
     async addWish(req: Request, res: Response) {
         try {
-            if(req.user){
+            if (req.user) {
                 const user = await AuthService.getInstance().addWish(req.user._id, req.params.wish);
                 if (!user) {
                     res.status(404).end()
@@ -162,7 +162,7 @@ export class AuthController {
 
     async removeWish(req: Request, res: Response) {
         try {
-            if(req.user){
+            if (req.user) {
                 const user = await AuthService.getInstance().removeWish(req.user._id, req.params.wish);
                 if (!user) {
                     res.status(404).end()
@@ -177,7 +177,7 @@ export class AuthController {
 
     async removeLike(req: Request, res: Response) {
         try {
-            if(req.user){
+            if (req.user) {
                 const user = await AuthService.getInstance().removeLike(req.user._id, req.params.like);
                 if (!user) {
                     res.status(404).end()
@@ -190,16 +190,14 @@ export class AuthController {
         }
     }
 
-    async resetPassword(req: Request, res: Response){
+    async resetPassword(req: Request, res: Response) {
         try {
-            if(req.user){
-                const user = await AuthService.getInstance().removeLike(req.body.email, req.body.password);
-                if (!user) {
-                    res.status(404).end()
-                    return;
-                }
-                res.json(user);
+            const user = await AuthService.getInstance().resetPassword(req.body.email, req.body.password);
+            if (!user) {
+                res.status(404).end()
+                return;
             }
+            res.json(user);
         } catch (err) {
             res.status(400).end();
         }
