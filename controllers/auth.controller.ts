@@ -15,7 +15,7 @@ export class AuthController {
             if (!req.body.email.match("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
                 res.status(418).end();
             }
-            if (!(await AuthService.getInstance().getByEmail(req.body.email))) {
+            if (await AuthService.getInstance().getByEmail(req.body.email)) {
                 res.status(401).end();
             }
 
